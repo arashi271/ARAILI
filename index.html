@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#176b45">
+<title>ARAILI - Aplikasi Arisan</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7f4;color:#24352b}
+header{background:#176b45;color:white;padding:24px 18px;border-radius:0 0 22px 22px}
+header h1{margin:0;font-size:27px}
+header p{margin:7px 0 0;font-size:14px}
+main{padding:16px;max-width:650px;margin:auto}
+.card{background:white;padding:18px;margin-bottom:14px;border-radius:15px;box-shadow:0 3px 12px #0000000b}
+h2{font-size:18px;margin:0 0 14px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:#e2f2e8;padding:15px;border-radius:12px}
+.stat span{font-size:12px;color:#52665a}
+.stat strong{display:block;font-size:24px;margin-top:8px;color:#176b45}
+nav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+button{border:0;border-radius:10px;padding:12px;background:#176b45;color:white;font-weight:bold;cursor:pointer}
+nav button{background:white;color:#176b45;border:1px solid #dce8df}
+nav button.active{background:#176b45;color:white}
+input,select{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #ccd9cf;border-radius:9px;font-size:15px}
+label{font-size:13px;font-weight:bold}
+.item{padding:12px 0;border-bottom:1px solid #e8eee9;overflow-wrap:anywhere}
+.item:last-child{border:0}
+.muted{font-size:13px;color:#68796e}
+.danger{background:#b83232;margin-left:6px}
+footer{text-align:center;padding:20px;color:#718076;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌿 ARAILI</h1>
+  <p>Arisan lebih mudah, rapi, dan teratur.</p>
+</header>
+<main>
+  <nav>
+    <button class="active" onclick="buka('dashboard',this)">Beranda</button>
+    <button onclick="buka('anggota',this)">Anggota</button>
+    <button onclick="buka('arisan',this)">Arisan</button>
+  </nav>
+
+  <section id="dashboard">
+    <div class="card">
+      <h2>Assalamu'alaikum 👋</h2>
+      Selamat datang di aplikasi ARAILI.
+      <p class="muted">Kelola data arisanmu dari satu tempat.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><span>Total Anggota</span><strong id="totalAnggota">0</strong></div>
+      <div class="stat"><span>Kelompok Arisan</span><strong id="totalArisan">0</strong></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h2>Ringkasan</h2>
+      <p id="ringkasan" class="muted">Belum ada data. Silakan tambahkan anggota dan kelompok arisan.</p>
+    </div>
+  </section>
+
+  <section id="anggota" hidden>
+    <div class="card">
+      <h2>Tambah Anggota</h2>
+      <label>Nama anggota</label>
+      <input id="namaAnggota" placeholder="Contoh: Ibu Siti">
+      <label>Nomor HP (opsional)</label>
+      <input id="hpAnggota" type="tel" placeholder="Contoh: 08xxxxxxxxxx">
+      <button onclick="tambahAnggota()">+ Simpan Anggota</button>
+    </div>
+    <div class="card">
+      <h2>Daftar Anggota</h2>
+      <div id="daftarAnggota" class="muted">Belum ada anggota.</div>
+    </div>
+  </section>
+
+  <section id="arisan" hidden>
+    <div class="card">
+      <h2>Buat Kelompok Arisan</h2>
+      <label>Nama kelompok</label>
+      <input id="namaArisan" placeholder="Contoh: Arisan Melati">
+      <label>Iuran per anggota (Rp)</label>
+      <input id="iuranArisan" type="number" min="1" placeholder="Contoh: 100000">
+      <button onclick="tambahArisan()">+ Buat Kelompok</button>
+    </div>
+    <div class="card">
+      <h2>Daftar Kelompok</h2>
+      <div id="daftarArisan" class="muted">Belum ada kelompok arisan.</div>
+    </div>
+  </section>
+</main>
+<footer>ARAILI • Aplikasi Arisan</footer>
+
+<script>
+const baca=(k)=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []}};
+let anggota=baca('araili_anggota');
+let arisan=baca('araili_arisan');
+
+function simpan(){
+  localStorage.setItem('araili_anggota',JSON.stringify(anggota));
+  localStorage.setItem('araili_arisan',JSON.stringify(arisan));
+  tampilkan();
+}
+function aman(teks){
+  return String(teks).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function buka(id,tombol){
+  document.querySelectorAll('main section').forEach(s=>s.hidden=true);
+  document.getElementById(id).hidden=false;
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  tombol.classList.add('active');
+}
+function tambahAnggota(){
+  const nama=document.getElementById('namaAnggota').value.trim();
+  const hp=document.getElementById('hpAnggota').value.trim();
+  if(!nama)return alert('Nama anggota harus diisi.');
+  anggota.push({id:Date.now(),nama,hp});
+  document.getElementById('namaAnggota').value='';
+  document.getElementById('hpAnggota').value='';
+  simpan();
+  alert('Anggota berhasil disimpan.');
+}
+function tambahArisan(){
+  const nama=document.getElementById('namaArisan').value.trim();
+  const iuran=Number(document.getElementById('iuranArisan').value);
+  if(!nama)return alert('Nama kelompok harus diisi.');
+  if(!Number.isFinite(iuran)||iuran<=0)return alert('Nominal iuran harus lebih dari nol.');
+  arisan.push({id:Date.now(),nama,iuran});
+  document.getElementById('namaArisan').value='';
+  document.getElementById('iuranArisan').value='';
+  simpan();
+  alert('Kelompok arisan berhasil dibuat.');
+}
+function hapusAnggota(id){
+  if(confirm('Hapus anggota ini?')){anggota=anggota.filter(a=>a.id!==id);simpan();}
+}
+function hapusArisan(id){
+  if(confirm('Hapus kelompok ini?')){arisan=arisan.filter(a=>a.id!==id);simpan();}
+}
+function rupiah(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n)}
+function tampilkan(){
+  document.getElementById('totalAnggota').textContent=anggota.length;
+  document.getElementById('totalArisan').textContent=arisan.length;
+  document.getElementById('ringkasan').textContent=
+    'Terdapat '+anggota.length+' anggota dan '+arisan.length+' kelompok arisan.';
+  document.getElementById('daftarAnggota').innerHTML=anggota.length?anggota.map(a=>
+    '<div class="item"><b>'+aman(a.nama)+'</b><br><span class="muted">'+aman(a.hp||'Nomor HP belum diisi')+'</span><br><button class="danger" onclick="hapusAnggota('+a.id+')">Hapus</button></div>'
+  ).join(''):'Belum ada anggota.';
+  document.getElementById('daftarArisan').innerHTML=arisan.length?arisan.map(a=>
+    '<div class="item"><b>'+aman(a.nama)+'</b><br>Iuran: '+rupiah(a.iuran)+'<br><button class="danger" onclick="hapusArisan('+a.id+')">Hapus</button></div>'
+  ).join(''):'Belum ada kelompok arisan.';
+}
+tampilkan();
+</script>
+</body>
+</html>
