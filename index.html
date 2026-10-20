@@ -2,155 +2,403 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#176b45">
-<title>ARAILI - Aplikasi Arisan</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#063b40">
+<title>ARAILI — Arisan Modern</title>
 <style>
+:root{
+ --deep:#063b40;--green:#078765;--mint:#24c69a;
+ --gold:#f2bd52;--bg:#f0f8f7;--white:#fff;
+ --text:#123746;--muted:#6d8790;--line:#dcebe9;
+ --purple:#7868ee;--red:#d84d62;
+}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f7f4;color:#24352b}
-header{background:#176b45;color:white;padding:24px 18px;border-radius:0 0 22px 22px}
-header h1{margin:0;font-size:27px}
-header p{margin:7px 0 0;font-size:14px}
-main{padding:16px;max-width:650px;margin:auto}
-.card{background:white;padding:18px;margin-bottom:14px;border-radius:15px;box-shadow:0 3px 12px #0000000b}
-h2{font-size:18px;margin:0 0 14px}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat{background:#e2f2e8;padding:15px;border-radius:12px}
-.stat span{font-size:12px;color:#52665a}
-.stat strong{display:block;font-size:24px;margin-top:8px;color:#176b45}
-nav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
-button{border:0;border-radius:10px;padding:12px;background:#176b45;color:white;font-weight:bold;cursor:pointer}
-nav button{background:white;color:#176b45;border:1px solid #dce8df}
-nav button.active{background:#176b45;color:white}
-input,select{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #ccd9cf;border-radius:9px;font-size:15px}
-label{font-size:13px;font-weight:bold}
-.item{padding:12px 0;border-bottom:1px solid #e8eee9;overflow-wrap:anywhere}
-.item:last-child{border:0}
-.muted{font-size:13px;color:#68796e}
-.danger{background:#b83232;margin-left:6px}
-footer{text-align:center;padding:20px;color:#718076;font-size:12px}
+body{margin:0;background:var(--bg);color:var(--text);
+ font:15px system-ui,-apple-system,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0}
+.hero{padding:24px 18px 30px;color:white;
+ background:radial-gradient(circle at 90% 0%,#168e81,transparent 45%),
+ linear-gradient(130deg,#042e38,#087c70 65%,#24b991)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:52px;height:52px;border-radius:17px;
+ display:grid;place-items:center;background:#ffffff20;
+ border:1px solid #ffffff45;font-size:29px}
+.brand h1{font-size:27px;margin:0;letter-spacing:1px}
+.brand p{margin:3px 0 0;font-size:12px;color:#d6f7ec}
+.welcome{margin-top:23px;font-size:13px;color:#e1fff5}
+.welcome strong{display:block;font-size:20px;color:white;margin-bottom:4px}
+main{max-width:850px;margin:auto;padding:15px 14px 90px}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);
+ gap:7px;margin-top:-18px;position:relative;margin-bottom:17px}
+.nav button{background:white;color:#52716f;padding:12px 3px;
+ border-radius:13px;font-size:12px;font-weight:700;
+ box-shadow:0 4px 15px #063b4010}
+.nav button.active{background:var(--green);color:white}
+.card{background:white;border:1px solid #e4efed;border-radius:19px;
+ padding:17px;margin-bottom:14px;box-shadow:0 6px 20px #063b4008}
+h2{font-size:17px;margin:0 0 14px}
+h3{font-size:15px;margin:0 0 8px}
+.muted{color:var(--muted);font-size:12px;line-height:1.6}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat{padding:15px;border-radius:17px;background:linear-gradient(140deg,#e1f8f0,#f4fcfa);
+ border:1px solid #d1f1e6}
+.stat:nth-child(2){background:linear-gradient(140deg,#eeebff,#faf9ff);border-color:#e2dcff}
+.stat:nth-child(3){background:linear-gradient(140deg,#fff4d9,#fffdf6);border-color:#ffebbb}
+.stat span{font-size:11px;color:var(--muted)}
+.stat strong{display:block;font-size:22px;margin-top:7px;overflow-wrap:anywhere}
+.stat small{font-size:11px;color:var(--muted)}
+.btn{background:linear-gradient(120deg,var(--green),var(--mint));
+ color:white;border-radius:11px;padding:12px 15px;font-weight:700}
+.btn.secondary{background:#e7f6f1;color:#08785f}
+.btn.gold{background:linear-gradient(120deg,#d99c24,var(--gold));color:#43310b}
+.btn.red{background:#fff0f2;color:#b52e45}
+.btn.small{padding:8px 10px;font-size:12px}
+.btnrow{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+label{display:block;font-size:12px;font-weight:700;margin:12px 0 5px}
+input,select{width:100%;border:1px solid #d8e7e4;background:#fbfefd;
+ padding:12px;border-radius:10px;color:var(--text);outline-color:var(--mint)}
+input:focus,select:focus{border-color:var(--green)}
+.item{padding:13px 0;border-bottom:1px solid #edf2f1}
+.item:last-child{border-bottom:0}
+.itemtop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.pill{display:inline-block;padding:5px 9px;border-radius:20px;
+ font-size:11px;background:#ddf7e9;color:#087a51}
+.pill.purple{background:#eeeaff;color:#6553d8}
+.pill.gold{background:#fff2cf;color:#95630a}
+.money{font-weight:800;color:#087e66}
+.empty{padding:16px;text-align:center;color:var(--muted);font-size:13px}
+.bar{height:7px;border-radius:9px;background:#e5efec;overflow:hidden;margin-top:10px}
+.bar div{height:100%;background:linear-gradient(90deg,var(--green),var(--mint))}
+.notice{padding:12px;border-radius:12px;background:#fff7df;color:#775615;
+ font-size:12px;line-height:1.6;margin-bottom:12px}
+#toast{position:fixed;bottom:18px;left:15px;right:15px;
+ background:var(--deep);color:white;padding:13px 16px;border-radius:12px;
+ display:none;z-index:5;box-shadow:0 5px 20px #0002}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:16px}
+@media(min-width:650px){.hero{padding:30px max(calc((100vw - 820px)/2),25px)}
+ main{padding-top:20px}.stats{grid-template-columns:repeat(3,1fr)}
+ .nav{grid-template-columns:repeat(6,1fr);margin-top:-20px}}
 </style>
 </head>
 <body>
-<header>
-  <h1>🌿 ARAILI</h1>
-  <p>Arisan lebih mudah, rapi, dan teratur.</p>
+<header class="hero">
+ <div class="brand">
+  <div class="logo">🌿</div>
+  <div><h1>ARAILI <span style="color:#f4cb72">✦</span></h1>
+   <p>Arisan lebih mudah, rapi, dan teratur.</p></div>
+ </div>
+ <div class="welcome"><strong>Assalamu'alaikum 👋</strong>
+  Kelola arisan dengan lebih mudah dan terorganisir.</div>
 </header>
 <main>
-  <nav>
-    <button class="active" onclick="buka('dashboard',this)">Beranda</button>
-    <button onclick="buka('anggota',this)">Anggota</button>
-    <button onclick="buka('arisan',this)">Arisan</button>
-  </nav>
+ <nav class="nav" id="nav">
+  <button class="active" data-page="home">⌂<br>Beranda</button>
+  <button data-page="members">♙<br>Anggota</button>
+  <button data-page="groups">◇<br>Arisan</button>
+  <button data-page="payments">▤<br>Iuran</button>
+  <button data-page="draw">✦<br>Undian</button>
+  <button data-page="reports">▥<br>Laporan</button>
+ </nav>
+ <div class="notice">🔒 Versi uji coba lokal: data disimpan di browser perangkat ini. Jangan masukkan data sensitif atau mengandalkan aplikasi ini untuk menyimpan uang sungguhan. Ekspor cadangan secara berkala.</div>
 
-  <section id="dashboard">
-    <div class="card">
-      <h2>Assalamu'alaikum 👋</h2>
-      Selamat datang di aplikasi ARAILI.
-      <p class="muted">Kelola data arisanmu dari satu tempat.</p>
-    </div>
-    <div class="stats">
-      <div class="stat"><span>Total Anggota</span><strong id="totalAnggota">0</strong></div>
-      <div class="stat"><span>Kelompok Arisan</span><strong id="totalArisan">0</strong></div>
-    </div>
-    <div class="card" style="margin-top:14px">
-      <h2>Ringkasan</h2>
-      <p id="ringkasan" class="muted">Belum ada data. Silakan tambahkan anggota dan kelompok arisan.</p>
-    </div>
-  </section>
+ <section id="home" class="page">
+  <div class="stats">
+   <div class="stat"><span>👥 Total Anggota</span><strong id="sMembers">0</strong><small>Terdaftar</small></div>
+   <div class="stat"><span>🌿 Kelompok Arisan</span><strong id="sGroups">0</strong><small>Dibuat</small></div>
+   <div class="stat"><span>💰 Total Tercatat</span><strong id="sMoney">Rp0</strong><small>Pembayaran tersimpan</small></div>
+  </div>
+  <div class="card">
+   <h2>✨ Kelompok Arisan</h2>
+   <div id="homeGroups" class="empty">Belum ada kelompok arisan.</div>
+   <button class="btn" onclick="go('groups')">＋ Buat / Kelola Kelompok</button>
+  </div>
+  <div class="card">
+   <h2>👥 Anggota Terbaru</h2><div id="homeMembers" class="empty">Belum ada anggota.</div>
+   <button class="btn secondary" onclick="go('members')">Kelola Anggota</button>
+  </div>
+ </section>
 
-  <section id="anggota" hidden>
-    <div class="card">
-      <h2>Tambah Anggota</h2>
-      <label>Nama anggota</label>
-      <input id="namaAnggota" placeholder="Contoh: Ibu Siti">
-      <label>Nomor HP (opsional)</label>
-      <input id="hpAnggota" type="tel" placeholder="Contoh: 08xxxxxxxxxx">
-      <button onclick="tambahAnggota()">+ Simpan Anggota</button>
-    </div>
-    <div class="card">
-      <h2>Daftar Anggota</h2>
-      <div id="daftarAnggota" class="muted">Belum ada anggota.</div>
-    </div>
-  </section>
+ <section id="members" class="page" hidden>
+  <div class="card">
+   <h2 id="memberFormTitle">＋ Tambah Anggota</h2>
+   <input id="memberEditId" type="hidden">
+   <label>Nama anggota *</label><input id="memberName" placeholder="Contoh: Ibu Siti" maxlength="80">
+   <label>Nomor HP (opsional)</label><input id="memberPhone" type="tel" placeholder="Contoh: 08xx" maxlength="25">
+   <div class="btnrow"><button class="btn" onclick="saveMember()">Simpan Anggota</button>
+   <button class="btn secondary" onclick="resetMember()">Bersihkan</button></div>
+  </div>
+  <div class="card"><h2>📋 Daftar Anggota</h2><div id="memberList"></div></div>
+ </section>
 
-  <section id="arisan" hidden>
-    <div class="card">
-      <h2>Buat Kelompok Arisan</h2>
-      <label>Nama kelompok</label>
-      <input id="namaArisan" placeholder="Contoh: Arisan Melati">
-      <label>Iuran per anggota (Rp)</label>
-      <input id="iuranArisan" type="number" min="1" placeholder="Contoh: 100000">
-      <button onclick="tambahArisan()">+ Buat Kelompok</button>
-    </div>
-    <div class="card">
-      <h2>Daftar Kelompok</h2>
-      <div id="daftarArisan" class="muted">Belum ada kelompok arisan.</div>
-    </div>
-  </section>
+ <section id="groups" class="page" hidden>
+  <div class="card">
+   <h2 id="groupFormTitle">＋ Buat Kelompok</h2>
+   <input id="groupEditId" type="hidden">
+   <label>Nama kelompok *</label><input id="groupName" placeholder="Contoh: Arisan Melati" maxlength="80">
+   <label>Iuran per anggota (Rp) *</label><input id="groupFee" type="number" min="1" step="1" placeholder="100000">
+   <label>Anggota kelompok (pilih satu atau lebih)</label>
+   <div id="groupMemberChoices" class="muted">Tambahkan anggota terlebih dahulu.</div>
+   <div class="btnrow"><button class="btn" onclick="saveGroup()">Simpan Kelompok</button>
+   <button class="btn secondary" onclick="resetGroup()">Bersihkan</button></div>
+  </div>
+  <div class="card"><h2>🌿 Daftar Kelompok</h2><div id="groupList"></div></div>
+ </section>
+
+ <section id="payments" class="page" hidden>
+  <div class="card">
+   <h2>💳 Catat Pembayaran Iuran</h2>
+   <label>Kelompok arisan</label><select id="payGroup" onchange="fillPayMembers()"></select>
+   <label>Anggota</label><select id="payMember"></select>
+   <label>Nominal dibayar (Rp)</label><input id="payAmount" type="number" min="1" step="1" placeholder="100000">
+   <label>Tanggal pembayaran</label><input id="payDate" type="date">
+   <label>Catatan (opsional)</label><input id="payNote" maxlength="100" placeholder="Contoh: Iuran bulan Oktober">
+   <button class="btn" onclick="savePayment()">＋ Simpan Pembayaran</button>
+  </div>
+  <div class="card"><h2>🧾 Riwayat Pembayaran</h2><div id="paymentList"></div></div>
+ </section>
+
+ <section id="draw" class="page" hidden>
+  <div class="card">
+   <h2>🎁 Pengundian Arisan</h2>
+   <div class="notice">Undian di sini memilih satu anggota yang belum pernah menang dalam kelompok tersebut. Pastikan aturan dan daftar peserta sudah disepakati sebelum undian dilakukan.</div>
+   <label>Pilih kelompok</label><select id="drawGroup" onchange="drawInfo()"></select>
+   <div id="drawInfoText" class="muted">Pilih kelompok terlebih dahulu.</div>
+   <button class="btn gold" onclick="drawWinner()">✦ Lakukan Undian</button>
+   <div id="winnerBox"></div>
+  </div>
+  <div class="card"><h2>🏆 Riwayat Pemenang</h2><div id="winnerList"></div></div>
+ </section>
+
+ <section id="reports" class="page" hidden>
+  <div class="card"><h2>📊 Ringkasan Keuangan</h2>
+   <div class="stats">
+    <div class="stat"><span>Total Pembayaran</span><strong id="rPaid">Rp0</strong></div>
+    <div class="stat"><span>Jumlah Transaksi</span><strong id="rCount">0</strong></div>
+   </div>
+   <p class="muted">Laporan berdasarkan pembayaran yang dicatat di aplikasi ini. Ini bukan rekening bank atau bukti bahwa uang benar-benar telah diterima.</p>
+  </div>
+  <div class="card"><h2>💾 Cadangan Data</h2>
+   <p class="muted">Ekspor file JSON untuk menyimpan cadangan. Simpan file di tempat aman. File ini berisi data yang dimasukkan ke aplikasi.</p>
+   <div class="btnrow"><button class="btn" onclick="exportData()">Unduh Cadangan</button>
+   <button class="btn secondary" onclick="document.getElementById('importFile').click()">Pulihkan Cadangan</button></div>
+   <input id="importFile" type="file" accept=".json,application/json" hidden onchange="importData(event)">
+   <p class="muted">Memulihkan cadangan akan mengganti seluruh data saat ini. Pastikan sudah mengunduh cadangan terbaru terlebih dahulu.</p>
+  </div>
+ </section>
+ <footer>🌿 ARAILI • Arisan lebih rapi, bersama lebih berarti.</footer>
 </main>
-<footer>ARAILI • Aplikasi Arisan</footer>
-
+<div id="toast" role="status"></div>
 <script>
-const baca=(k)=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []}};
-let anggota=baca('araili_anggota');
-let arisan=baca('araili_arisan');
-
-function simpan(){
-  localStorage.setItem('araili_anggota',JSON.stringify(anggota));
-  localStorage.setItem('araili_arisan',JSON.stringify(arisan));
-  tampilkan();
+'use strict';
+const KEY='araili_v2_data';
+const emptyData=()=>({members:[],groups:[],payments:[],winners:[]});
+function loadData(){
+ try{
+  const d=JSON.parse(localStorage.getItem(KEY)||'null');
+  if(d&&Array.isArray(d.members)&&Array.isArray(d.groups)&&Array.isArray(d.payments)&&Array.isArray(d.winners))return d;
+ }catch(e){}
+ return emptyData();
 }
-function aman(teks){
-  return String(teks).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let db=loadData();
+let toastTimer;
+function notify(msg){
+ const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
+ clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.display='none',2600);
 }
-function buka(id,tombol){
-  document.querySelectorAll('main section').forEach(s=>s.hidden=true);
-  document.getElementById(id).hidden=false;
-  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-  tombol.classList.add('active');
+function persist(){
+ try{localStorage.setItem(KEY,JSON.stringify(db));render();return true}
+ catch(e){notify('Penyimpanan gagal. Segera ekspor cadangan dan periksa ruang browser.');return false}
 }
-function tambahAnggota(){
-  const nama=document.getElementById('namaAnggota').value.trim();
-  const hp=document.getElementById('hpAnggota').value.trim();
-  if(!nama)return alert('Nama anggota harus diisi.');
-  anggota.push({id:Date.now(),nama,hp});
-  document.getElementById('namaAnggota').value='';
-  document.getElementById('hpAnggota').value='';
-  simpan();
-  alert('Anggota berhasil disimpan.');
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function money(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n)}
+function uid(){return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9)}
+function today(){return new Date().toLocaleDateString('en-CA')}
+function go(id){
+ document.querySelectorAll('.page').forEach(p=>p.hidden=p.id!==id);
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+ if(id==='groups')renderMemberChoices();
+ if(id==='payments')fillPayGroups();
+ if(id==='draw')fillDrawGroups();
+ window.scrollTo({top:0,behavior:'smooth'});
 }
-function tambahArisan(){
-  const nama=document.getElementById('namaArisan').value.trim();
-  const iuran=Number(document.getElementById('iuranArisan').value);
-  if(!nama)return alert('Nama kelompok harus diisi.');
-  if(!Number.isFinite(iuran)||iuran<=0)return alert('Nominal iuran harus lebih dari nol.');
-  arisan.push({id:Date.now(),nama,iuran});
-  document.getElementById('namaArisan').value='';
-  document.getElementById('iuranArisan').value='';
-  simpan();
-  alert('Kelompok arisan berhasil dibuat.');
+document.getElementById('nav').addEventListener('click',e=>{
+ const b=e.target.closest('button[data-page]');if(b)go(b.dataset.page);
+});
+function resetMember(){
+ document.getElementById('memberEditId').value='';
+ document.getElementById('memberName').value='';
+ document.getElementById('memberPhone').value='';
+ document.getElementById('memberFormTitle').textContent='＋ Tambah Anggota';
 }
-function hapusAnggota(id){
-  if(confirm('Hapus anggota ini?')){anggota=anggota.filter(a=>a.id!==id);simpan();}
+function saveMember(){
+ const id=document.getElementById('memberEditId').value;
+ const name=document.getElementById('memberName').value.trim();
+ const phone=document.getElementById('memberPhone').value.trim();
+ if(!name)return notify('Nama anggota wajib diisi.');
+ if(id){
+  const m=db.members.find(x=>x.id===id);if(!m)return notify('Anggota tidak ditemukan.');
+  m.name=name;m.phone=phone;
+ }else db.members.push({id:uid(),name,phone,created:new Date().toISOString()});
+ if(persist()){resetMember();notify('Data anggota disimpan.')}
 }
-function hapusArisan(id){
-  if(confirm('Hapus kelompok ini?')){arisan=arisan.filter(a=>a.id!==id);simpan();}
+function editMember(id){
+ const m=db.members.find(x=>x.id===id);if(!m)return;
+ document.getElementById('memberEditId').value=id;
+ document.getElementById('memberName').value=m.name;
+ document.getElementById('memberPhone').value=m.phone||'';
+ document.getElementById('memberFormTitle').textContent='✎ Edit Anggota';
+ go('members');
 }
-function rupiah(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n)}
-function tampilkan(){
-  document.getElementById('totalAnggota').textContent=anggota.length;
-  document.getElementById('totalArisan').textContent=arisan.length;
-  document.getElementById('ringkasan').textContent=
-    'Terdapat '+anggota.length+' anggota dan '+arisan.length+' kelompok arisan.';
-  document.getElementById('daftarAnggota').innerHTML=anggota.length?anggota.map(a=>
-    '<div class="item"><b>'+aman(a.nama)+'</b><br><span class="muted">'+aman(a.hp||'Nomor HP belum diisi')+'</span><br><button class="danger" onclick="hapusAnggota('+a.id+')">Hapus</button></div>'
-  ).join(''):'Belum ada anggota.';
-  document.getElementById('daftarArisan').innerHTML=arisan.length?arisan.map(a=>
-    '<div class="item"><b>'+aman(a.nama)+'</b><br>Iuran: '+rupiah(a.iuran)+'<br><button class="danger" onclick="hapusArisan('+a.id+')">Hapus</button></div>'
-  ).join(''):'Belum ada kelompok arisan.';
+function deleteMember(id){
+ if(db.groups.some(g=>g.memberIds.includes(id))||db.payments.some(p=>p.memberId===id)||db.winners.some(w=>w.memberId===id))
+  return notify('Anggota sudah terkait dengan arisan/riwayat. Jangan hapus agar catatan tetap utuh.');
+ if(confirm('Hapus anggota ini?')){db.members=db.members.filter(m=>m.id!==id);persist();notify('Anggota dihapus.')}
 }
-tampilkan();
+function renderMemberChoices(selected=[]){
+ const box=document.getElementById('groupMemberChoices');
+ if(!db.members.length){box.innerHTML='<p class="muted">Belum ada anggota. Tambahkan melalui menu Anggota.</p>';return}
+ box.innerHTML=db.members.map(m=>'<label style="display:flex;gap:9px;align-items:center;font-weight:500"><input style="width:auto;margin:0" type="checkbox" name="groupMember" value="'+esc(m.id)+'" '+(selected.includes(m.id)?'checked':'')+'> '+esc(m.name)+'</label>').join('');
+}
+function resetGroup(){
+ document.getElementById('groupEditId').value='';
+ document.getElementById('groupName').value='';
+ document.getElementById('groupFee').value='';
+ document.getElementById('groupFormTitle').textContent='＋ Buat Kelompok';
+ renderMemberChoices();
+}
+function saveGroup(){
+ const id=document.getElementById('groupEditId').value;
+ const name=document.getElementById('groupName').value.trim();
+ const fee=Number(document.getElementById('groupFee').value);
+ const memberIds=[...document.querySelectorAll('input[name="groupMember"]:checked')].map(x=>x.value);
+ if(!name)return notify('Nama kelompok wajib diisi.');
+ if(!Number.isSafeInteger(fee)||fee<=0)return notify('Iuran harus berupa angka rupiah bulat lebih dari nol.');
+ if(!memberIds.length)return notify('Pilih minimal satu anggota.');
+ if(id){
+  const g=db.groups.find(x=>x.id===id);if(!g)return notify('Kelompok tidak ditemukan.');
+  g.name=name;g.fee=fee;g.memberIds=memberIds;
+ }else db.groups.push({id:uid(),name,fee,memberIds,winnerIds:[],created:new Date().toISOString()});
+ if(persist()){resetGroup();notify('Kelompok arisan berhasil disimpan.')}
+}
+function editGroup(id){
+ const g=db.groups.find(x=>x.id===id);if(!g)return;
+ document.getElementById('groupEditId').value=id;
+ document.getElementById('groupName').value=g.name;
+ document.getElementById('groupFee').value=g.fee;
+ document.getElementById('groupFormTitle').textContent='✎ Edit Kelompok';
+ renderMemberChoices(g.memberIds);go('groups');
+}
+function deleteGroup(id){
+ if(db.payments.some(p=>p.groupId===id)||db.winners.some(w=>w.groupId===id))
+  return notify('Kelompok memiliki riwayat. Hapus tidak diizinkan agar catatan keuangan tetap utuh.');
+ if(confirm('Hapus kelompok ini?')){db.groups=db.groups.filter(g=>g.id!==id);persist();notify('Kelompok dihapus.')}
+}
+function groupPaid(gid){
+ return db.payments.filter(p=>p.groupId===gid).reduce((s,p)=>s+p.amount,0);
+}
+function groupCard(g){
+ const paid=groupPaid(g.id),target=g.fee*g.memberIds.length;
+ const pct=target?Math.min(100,Math.round(paid/target*100)):0;
+ return '<div class="item"><div class="itemtop"><div><h3>'+esc(g.name)+'</h3><div class="muted">Iuran per anggota: <b>'+money(g.fee)+'</b></div><div class="muted">'+g.memberIds.length+' anggota</div></div><span class="pill purple">Aktif</span></div><div class="bar"><div style="width:'+pct+'%"></div></div><p class="muted">Pembayaran tercatat: <b>'+money(paid)+'</b> · Target satu putaran: <b>'+money(target)+'</b></p><div class="btnrow"><button class="btn secondary small" onclick="editGroup(\''+g.id+'\')">Edit</button><button class="btn small" onclick="go(\'payments\');document.getElementById(\'payGroup\').value=\''+g.id+'\';fillPayMembers()">Catat Iuran</button><button class="btn red small" onclick="deleteGroup(\''+g.id+'\')">Hapus</button></div></div>';
+}
+function fillPayGroups(){
+ const s=document.getElementById('payGroup'),old=s.value;
+ s.innerHTML=db.groups.map(g=>'<option value="'+esc(g.id)+'">'+esc(g.name)+'</option>').join('');
+ if(!db.groups.length)s.innerHTML='<option value="">Belum ada kelompok</option>';
+ if(db.groups.some(g=>g.id===old))s.value=old;
+ fillPayMembers();
+}
+function fillPayMembers(){
+ const gid=document.getElementById('payGroup').value,g=db.groups.find(x=>x.id===gid);
+ const s=document.getElementById('payMember'),old=s.value;
+ s.innerHTML=(g?g.memberIds.map(id=>db.members.find(m=>m.id===id)).filter(Boolean):[]).map(m=>'<option value="'+esc(m.id)+'">'+esc(m.name)+'</option>').join('');
+ if(!s.options.length)s.innerHTML='<option value="">Tidak ada anggota</option>';
+ if([...s.options].some(o=>o.value===old))s.value=old;
+}
+function savePayment(){
+ const groupId=document.getElementById('payGroup').value,memberId=document.getElementById('payMember').value;
+ const amount=Number(document.getElementById('payAmount').value),date=document.getElementById('payDate').value;
+ const g=db.groups.find(x=>x.id===groupId);
+ if(!g||!g.memberIds.includes(memberId))return notify('Pilih kelompok dan anggota yang valid.');
+ if(!Number.isSafeInteger(amount)||amount<=0)return notify('Nominal harus lebih dari nol dan berupa rupiah bulat.');
+ if(!date)return notify('Tanggal pembayaran wajib diisi.');
+ db.payments.push({id:uid(),groupId,memberId,amount,date,note:document.getElementById('payNote').value.trim(),created:new Date().toISOString()});
+ if(persist()){document.getElementById('payAmount').value='';document.getElementById('payNote').value='';notify('Pembayaran dicatat di perangkat ini.')}
+}
+function deletePayment(id){
+ if(confirm('Hapus catatan pembayaran ini?')){db.payments=db.payments.filter(p=>p.id!==id);persist();notify('Catatan dihapus.')}
+}
+function fillDrawGroups(){
+ const s=document.getElementById('drawGroup'),old=s.value;
+ s.innerHTML=db.groups.map(g=>'<option value="'+esc(g.id)+'">'+esc(g.name)+'</option>').join('');
+ if(!db.groups.length)s.innerHTML='<option value="">Belum ada kelompok</option>';
+ if(db.groups.some(g=>g.id===old))s.value=old;
+ drawInfo();
+}
+function drawInfo(){
+ const g=db.groups.find(x=>x.id===document.getElementById('drawGroup').value);
+ const box=document.getElementById('drawInfoText');
+ if(!g){box.textContent='Buat kelompok dan tambahkan anggota terlebih dahulu.';return}
+ const eligible=g.memberIds.filter(id=>db.members.some(m=>m.id===id)&&!g.winnerIds.includes(id));
+ box.textContent='Anggota: '+g.memberIds.length+'. Belum pernah menang: '+eligible.length+'. Undian tidak dapat dilakukan jika tidak ada peserta tersisa.';
+}
+function drawWinner(){
+ const gid=document.getElementById('drawGroup').value,g=db.groups.find(x=>x.id===gid);
+ if(!g)return notify('Pilih kelompok terlebih dahulu.');
+ const eligible=g.memberIds.filter(id=>db.members.some(m=>m.id===id)&&!g.winnerIds.includes(id));
+ if(!eligible.length)return notify('Tidak ada peserta tersisa. Buat siklus baru hanya setelah siklus lama selesai dan disepakati.');
+ if(!confirm('Lakukan undian untuk kelompok '+g.name+'? Hasil akan disimpan dan tidak bisa diulang otomatis.'))return;
+ const id=eligible[Math.floor(Math.random()*eligible.length)],m=db.members.find(x=>x.id===id);
+ g.winnerIds.push(id);
+ db.winners.push({id:uid(),groupId:gid,memberId:id,date:today(),name:m.name,groupName:g.name});
+ if(persist()){
+  document.getElementById('winnerBox').innerHTML='<div class="card" style="margin-top:15px;background:#e6faf1;text-align:center"><div style="font-size:35px">🏆</div><h2>Hasil Undian</h2><h3>'+esc(m.name)+'</h3><p>'+esc(g.name)+'</p></div>';
+  drawInfo();notify('Hasil undian tersimpan. Catat dan umumkan secara transparan.');
+ }
+}
+function exportData(){
+ const blob=new Blob([JSON.stringify({format:'ARAILI_BACKUP_V2',exportedAt:new Date().toISOString(),data:db},null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='araili-backup-'+today()+'.json';a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1500);notify('Cadangan diunduh jika browser mengizinkan.');
+}
+function importData(e){
+ const file=e.target.files[0];if(!file)return;
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const parsed=JSON.parse(reader.result),d=parsed.data;
+   if(!d||!Array.isArray(d.members)||!Array.isArray(d.groups)||!Array.isArray(d.payments)||!Array.isArray(d.winners))throw Error();
+   if(!confirm('Pulihkan cadangan akan MENGGANTI semua data sekarang. Lanjutkan hanya jika file benar.'))return;
+   const old=db;db=d;
+   if(!persist()){db=old;return}
+   notify('Cadangan dipulihkan.');
+  }catch(err){notify('File cadangan tidak valid. Data tidak diubah.')}
+  finally{e.target.value=''}
+ };
+ reader.readAsText(file);
+}
+function render(){
+ const total=db.payments.reduce((s,p)=>s+p.amount,0);
+ document.getElementById('sMembers').textContent=db.members.length;
+ document.getElementById('sGroups').textContent=db.groups.length;
+ document.getElementById('sMoney').textContent=money(total);
+ document.getElementById('rPaid').textContent=money(total);
+ document.getElementById('rCount').textContent=db.payments.length;
+ document.getElementById('homeGroups').innerHTML=db.groups.length?db.groups.map(groupCard).join(''):'<div class="empty">Belum ada kelompok arisan.</div>';
+ document.getElementById('homeMembers').innerHTML=db.members.length?db.members.slice(-5).reverse().map(m=>'<div class="item"><div class="itemtop"><div><b>'+esc(m.name)+'</b><div class="muted">'+esc(m.phone||'Nomor HP tidak dicatat')+'</div></div><button class="btn secondary small" onclick="editMember(\''+m.id+'\')">Edit</button></div></div>').join(''):'<div class="empty">Belum ada anggota.</div>';
+ document.getElementById('memberList').innerHTML=db.members.length?db.members.map(m=>'<div class="item"><div class="itemtop"><div><b>'+esc(m.name)+'</b><div class="muted">'+esc(m.phone||'Nomor HP tidak dicatat')+'</div></div><div class="btnrow"><button class="btn secondary small" onclick="editMember(\''+m.id+'\')">Edit</button><button class="btn red small" onclick="deleteMember(\''+m.id+'\')">Hapus</button></div></div></div>').join(''):'<div class="empty">Belum ada anggota.</div>';
+ document.getElementById('groupList').innerHTML=db.groups.length?db.groups.map(groupCard).join(''):'<div class="empty">Belum ada kelompok arisan.</div>';
+ document.getElementById('paymentList').innerHTML=db.payments.length?db.payments.slice().reverse().map(p=>{
+  const m=db.members.find(x=>x.id===p.memberId),g=db.groups.find(x=>x.id===p.groupId);
+  return '<div class="item"><div class="itemtop"><div><b>'+esc(m?m.name:'Anggota tidak ditemukan')+'</b><div class="muted">'+esc(g?g.name:'Kelompok tidak ditemukan')+' · '+esc(p.date)+'</div><div class="muted">'+esc(p.note||'Pembayaran iuran')+'</div></div><div><b class="money">'+money(p.amount)+'</b><br><button class="btn red small" style="margin-top:7px" onclick="deletePayment(\''+p.id+'\')">Hapus catatan</button></div></div></div>';
+ }).join(''):'<div class="empty">Belum ada pembayaran tercatat.</div>';
+ document.getElementById('winnerList').innerHTML=db.winners.length?db.winners.slice().reverse().map(w=>'<div class="item"><b>🏆 '+esc(w.name)+'</b><div class="muted">'+esc(w.groupName)+' · '+esc(w.date)+'</div></div>').join(''):'<div class="empty">Belum ada pemenang.</div>';
+ fillPayGroups();fillDrawGroups();
+}
+document.getElementById('payDate').value=today();
+render();
 </script>
 </body>
 </html>
