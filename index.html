@@ -193,7 +193,14 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:16px}
 <script>
 'use strict';
 const KEY='araili_v2_data';
-const emptyData=()=>({members:[],groups:[],payments:[],winners:[]});
+const SUPABASE_URL = 'https://ctolokbqipsrzhxooxya.supabase.co/rest/v1/';
+const SUPABASE_KEY = 'sb_publishable_Og7a4LsGF0PnQEOlEWgIcA_r93ouY6c';
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+ const emptyData=()=>({members:[],groups:[],payments:[],winners:[]});
 function loadData(){
  try{
   const d=JSON.parse(localStorage.getItem(KEY)||'null');
