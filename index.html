@@ -76,6 +76,14 @@ input:focus,select:focus{border-color:var(--green)}
  background:var(--deep);color:white;padding:13px 16px;border-radius:12px;
  display:none;z-index:5;box-shadow:0 5px 20px #0002}
 footer{text-align:center;color:var(--muted);font-size:11px;padding:16px}
+
+.auth-wrap{max-width:520px;margin:24px auto;padding:16px}
+.auth-card{background:#fff;border:1px solid #dcebe9;border-radius:20px;padding:22px;box-shadow:0 8px 28px #063b4012}
+.auth-card h2{margin-bottom:8px}.auth-card .muted{margin-bottom:14px}
+.auth-tabs{display:flex;gap:8px;margin:14px 0}.auth-tabs button{flex:1}
+#authMessage{margin-top:12px;font-size:13px;line-height:1.5;white-space:pre-wrap}
+#accountBar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px;flex-wrap:wrap;color:#e1fff5;font-size:12px}
+
 @media(min-width:650px){.hero{padding:30px max(calc((100vw - 820px)/2),25px)}
  main{padding-top:20px}.stats{grid-template-columns:repeat(3,1fr)}
  .nav{grid-template-columns:repeat(6,1fr);margin-top:-20px}}
@@ -83,7 +91,23 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:16px}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<header class="hero">
+<section id="authScreen" class="auth-wrap">
+ <div class="auth-card">
+  <div class="brand" style="color:#123746"><div class="logo" style="background:#e7f6f1;border-color:#d1f1e6">🌿</div><div><h1 style="font-size:25px">ARAILI <span style="color:#d99c24">✦</span></h1><p style="color:#6d8790">Arisan lebih mudah, rapi, dan teratur.</p></div></div>
+  <h2 style="margin-top:22px">Masuk ke ARAILI</h2>
+  <p class="muted">Masuk ke akun atau buat akun baru untuk melanjutkan.</p>
+  <div class="auth-tabs"><button id="showLogin" class="btn">Masuk</button><button id="showSignup" class="btn secondary">Daftar akun</button></div>
+  <form id="authForm">
+   <div id="fullNameWrap" hidden><label>Nama lengkap</label><input id="authName" autocomplete="name" maxlength="80" placeholder="Nama kamu"></div>
+   <label>Email</label><input id="authEmail" type="email" autocomplete="email" required placeholder="nama@email.com">
+   <label>Kata sandi</label><input id="authPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="Minimal 6 karakter">
+   <button id="authSubmit" class="btn" type="submit" style="width:100%;margin-top:16px">Masuk</button>
+  </form>
+  <div id="authMessage" role="status" class="muted"></div>
+  <p class="muted" style="margin-top:14px">Catatan: tahap ini menambahkan autentikasi. Data anggota, kelompok, pembayaran, dan undian belum dipindahkan ke database; jangan gunakan sebagai pencatatan arisan online sampai integrasi database dan pengujian selesai.</p>
+ </div>
+</section>
+<header class="hero" hidden>
  <div class="brand">
   <div class="logo">🌿</div>
   <div><h1>ARAILI <span style="color:#f4cb72">✦</span></h1>
@@ -193,13 +217,77 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:16px}
 <script>
 'use strict';
 const KEY='araili_v2_data';
-const SUPABASE_URL = 'https://ctolokbqipsrzhxooxya.supabase.co/rest/v1/';
+const SUPABASE_URL = 'https://ctolokbqipsrzhxooxya.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Og7a4LsGF0PnQEOlEWgIcA_r93ouY6c';
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+
+// Tahap 1: autentikasi. Data aplikasi lama tetap lokal sampai tahap sinkronisasi database.
+let authMode = 'login';
+const authScreen = document.getElementById('authScreen');
+const authForm = document.getElementById('authForm');
+const authMessage = document.getElementById('authMessage');
+function setAuthMode(mode){
+  authMode = mode;
+  const signup = mode === 'signup';
+  document.getElementById('fullNameWrap').hidden = !signup;
+  document.getElementById('authName').required = signup;
+  document.getElementById('authPassword').autocomplete = signup ? 'new-password' : 'current-password';
+  document.getElementById('authSubmit').textContent = signup ? 'Buat akun' : 'Masuk';
+  document.getElementById('showLogin').className = signup ? 'btn secondary' : 'btn';
+  document.getElementById('showSignup').className = signup ? 'btn' : 'btn secondary';
+  authMessage.textContent = '';
+}
+function showAuthenticatedApp(user){
+  authScreen.hidden = true;
+  document.querySelector('header.hero').hidden = false;
+  document.querySelector('main').hidden = false;
+  document.getElementById('accountEmail').textContent = 'Login: ' + (user.email || 'akun aktif');
+  render();
+}
+async function checkAuthSession(){
+  const {data, error} = await supabaseClient.auth.getSession();
+  if(error){authMessage.textContent='Tidak dapat memeriksa sesi: '+error.message;return;}
+  if(data.session) showAuthenticatedApp(data.session.user);
+}
+document.getElementById('showLogin').addEventListener('click',()=>setAuthMode('login'));
+document.getElementById('showSignup').addEventListener('click',()=>setAuthMode('signup'));
+authForm.addEventListener('submit', async (event)=>{
+  event.preventDefault();
+  const email=document.getElementById('authEmail').value.trim();
+  const password=document.getElementById('authPassword').value;
+  const submit=document.getElementById('authSubmit');
+  submit.disabled=true; submit.textContent='Memproses…'; authMessage.textContent='';
+  try{
+    let result;
+    if(authMode==='signup'){
+      const fullName=document.getElementById('authName').value.trim();
+      result=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:fullName}}});
+      if(result.error) throw result.error;
+      if(result.data.session){showAuthenticatedApp(result.data.session.user);authMessage.textContent='';}
+      else authMessage.textContent='Pendaftaran diterima. Periksa email untuk konfirmasi akun, lalu masuk kembali.';
+    }else{
+      result=await supabaseClient.auth.signInWithPassword({email,password});
+      if(result.error) throw result.error;
+      showAuthenticatedApp(result.data.user);
+    }
+  }catch(error){authMessage.textContent='Belum berhasil: '+(error.message||'Periksa email, kata sandi, dan pengaturan Supabase Auth.');}
+  finally{submit.disabled=false;submit.textContent=authMode==='signup'?'Buat akun':'Masuk';}
+});
+document.getElementById('logoutBtn').addEventListener('click',async()=>{
+  const {error}=await supabaseClient.auth.signOut();
+  if(error){notify('Gagal keluar: '+error.message);return;}
+  document.querySelector('header.hero').hidden=true;
+  document.querySelector('main').hidden=true;
+  authScreen.hidden=false;
+  authForm.reset();setAuthMode('login');
+});
+supabaseClient.auth.onAuthStateChange((_event,session)=>{
+  if(session) showAuthenticatedApp(session.user);
+});
  const emptyData=()=>({members:[],groups:[],payments:[],winners:[]});
 function loadData(){
  try{
@@ -406,7 +494,8 @@ function render(){
  fillPayGroups();fillDrawGroups();
 }
 document.getElementById('payDate').value=today();
-render();
+setAuthMode('login');
+checkAuthSession();
 </script>
 </body>
 </html>
